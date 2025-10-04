@@ -5,7 +5,6 @@ import argparse
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-# workingcode
 # =========================
 # Path resolution
 # =========================

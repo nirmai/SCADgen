@@ -11,14 +11,13 @@ from tkinter import ttk, messagebox
 def resolve_paths():
     """
     Resolve dataset/output paths robustly:
-    - Prefer ./scad_dataset if present
-    - Else prefer ./CMTrain/scad_dataset
-    - Else use ./CMTrain/scad_dataset (create output dir anyway)
+    - Use absolute path to the scad_dataset directory
+    - Use designated generated_scad directory for output
     """
-    cwd = os.getcwd()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(script_dir))  # Go up to SCADgen folder
     candidates = [
-        os.path.join(cwd, "scad_dataset"),
-        os.path.join(cwd, "CMTrain", "scad_dataset"),
+        os.path.join(script_dir, "scad_dataset"),
     ]
     scad_dataset_dir = None
     for c in candidates:
@@ -27,15 +26,14 @@ def resolve_paths():
             break
 
     if scad_dataset_dir is None:
-        # fallback to ./CMTrain/scad_dataset even if not present
-        scad_dataset_dir = os.path.join(cwd, "CMTrain", "scad_dataset")
+        # fallback to ./scad_dataset even if not present
+        scad_dataset_dir = os.path.join(script_dir, "scad_dataset")
 
-    # OUTPUT_DIR next to dataset if possible; else ./generated_scad
-    base_for_output = os.path.dirname(scad_dataset_dir) if os.path.isdir(scad_dataset_dir) else cwd
-    output_dir = os.path.join(base_for_output, "generated_scad")
+    # Use the designated generated_scad folder at project root
+    output_dir = os.path.join(project_root, "generated_scad")
     os.makedirs(output_dir, exist_ok=True)
 
-    print(f"[DEBUG] CWD                : {cwd}")
+    print(f"[DEBUG] SCRIPT_DIR         : {script_dir}")
     print(f"[DEBUG] SCAD_DATASET_DIR   : {scad_dataset_dir} (exists={os.path.isdir(scad_dataset_dir)})")
     print(f"[DEBUG] OUTPUT_DIR         : {output_dir}")
 

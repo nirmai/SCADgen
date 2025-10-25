@@ -102,11 +102,11 @@ def replace_args_in_call(line, param_values):
     suffix = line[close_idx:]
     return f"{prefix}{param_str}{suffix}"
 
-def generate_scad_from_template(template, param_values):
+def generate_scad_from_template(template, param_values, output_filename=None):
     """
     Open the template and replace the FIRST callable line (e.g. mymodule(...);)
     or a line marked with "// CALL" with provided params.
-    Saves to OUTPUT_DIR/generated_<template>.
+    Saves to OUTPUT_DIR/output_filename or OUTPUT_DIR/generated_<template> if no filename provided.
     """
     template_path = os.path.join(SCAD_DATASET_DIR, template)
     if not os.path.isfile(template_path):
@@ -131,7 +131,13 @@ def generate_scad_from_template(template, param_values):
         call_line = "param_module();\n"
         new_lines.append(replace_args_in_call(call_line, param_values))
 
-    out_path = os.path.join(OUTPUT_DIR, f"generated_{os.path.basename(template)}")
+    if output_filename:
+        if not output_filename.lower().endswith('.scad'):
+            output_filename += '.scad'
+        out_path = os.path.join(OUTPUT_DIR, output_filename)
+    else:
+        out_path = os.path.join(OUTPUT_DIR, f"generated_{os.path.basename(template)}")
+    
     with open(out_path, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
 
@@ -201,6 +207,16 @@ def run_ui():
         show_param_fields()
     combo.bind("<<ComboboxSelected>>", lambda e: show_param_fields())
 
+    # Filename input
+    filename_frame = tk.Frame(top)
+    filename_frame.grid(row=3, column=0, columnspan=2, sticky="ew", pady=(10,0))
+    filename_frame.grid_columnconfigure(1, weight=1)
+    
+    tk.Label(filename_frame, text="Output filename:").grid(row=0, column=0, sticky="w", padx=6)
+    filename_entry = tk.Entry(filename_frame, width=50)
+    filename_entry.grid(row=0, column=1, sticky="ew", padx=6)
+    tk.Label(filename_frame, text=".scad").grid(row=0, column=2, sticky="w", padx=(0,6))
+
     # Preview
     preview = tk.LabelFrame(bottom, text="Generated SCAD Preview")
     preview.grid(row=0, column=0, sticky="nsew")
@@ -238,8 +254,11 @@ def run_ui():
                 return
             param_values[p] = v
 
+        # Get filename if provided
+        output_filename = filename_entry.get().strip()
+        
         try:
-            out_path = generate_scad_from_template(t, param_values)
+            out_path = generate_scad_from_template(t, param_values, output_filename)
         except Exception as e:
             messagebox.showerror("Generation Failed", f"{e}")
             return
@@ -304,7 +323,7 @@ def cli_main(args):
             print(f"[WARN] Missing values for: {', '.join(missing)} (template declared via // param: ...)")
             print("      You can pass them with: --set", " ".join([f"{m}=VALUE" for m in missing]))
 
-        out_path = generate_scad_from_template(tmpl, param_values)
+        out_path = generate_scad_from_template(tmpl, param_values, args.output)
         with open(out_path, "r", encoding="utf-8") as f:
             print("\n===== Generated SCAD =====")
             print(f.read())
@@ -320,6 +339,7 @@ def main():
     parser = argparse.ArgumentParser(description="SCAD Template Generator (GUI with CLI fallback)")
     parser.add_argument("--list", action="store_true", help="List available templates")
     parser.add_argument("--template", type=str, help="Template filename to generate from (e.g., mypart.scad)")
+    parser.add_argument("--output", type=str, help="Output filename (e.g., myoutput.scad)")
     parser.add_argument("--set", nargs="*", help="Parameter pairs like width=20 height=10 ...")
     parser.add_argument("--no-gui", action="store_true", help="Force CLI mode (helpful on headless systems)")
     args = parser.parse_args()

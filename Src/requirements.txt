@@ -1,0 +1,17 @@
+# SCAD Generator with NLP - Requirements
+# Install with: pip install -r requirements.txt
+
+# Core requirements for NLP functionality
+requests>=2.28.0         # HTTP library for API calls
+
+# Optional: for enhanced features
+# Uncomment to install:
+# flask>=2.0.0          # For creating custom NLP endpoints
+# ollama>=0.1.0         # For Ollama integration
+# openai>=1.0.0         # For easier OpenAI integration (optional)
+
+# Note: 
+# - requests is the only hard requirement
+# - The NLP component works with any OpenAI-compatible API
+# - Ollama can be installed separately from https://ollama.ai
+# - HuggingFace and Together.ai APIs use standard HTTPS requests

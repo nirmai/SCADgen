@@ -1,0 +1,50 @@
+{
+  "total_shapes": 9,
+  "shapes": {
+    "basic_cone.scad": {
+      "module": "param_cone",
+      "params": "radius=10, height=20",
+      "path": "scad_shapes_library\\basic_cone.scad"
+    },
+    "basic_cube.scad": {
+      "module": "param_cube",
+      "params": "size=10",
+      "path": "scad_shapes_library\\basic_cube.scad"
+    },
+    "basic_cylinder.scad": {
+      "module": "param_cylinder",
+      "params": "radius=5, height=20",
+      "path": "scad_shapes_library\\basic_cylinder.scad"
+    },
+    "basic_sphere.scad": {
+      "module": "param_sphere",
+      "params": "radius=10",
+      "path": "scad_shapes_library\\basic_sphere.scad"
+    },
+    "basic_torus.scad": {
+      "module": "param_torus",
+      "params": "major_radius=20, minor_radius=5",
+      "path": "scad_shapes_library\\basic_torus.scad"
+    },
+    "hexagonal_prism.scad": {
+      "module": "hexagonal_prism",
+      "params": "size=10, height=20",
+      "path": "scad_shapes_library\\hexagonal_prism.scad"
+    },
+    "pyramid.scad": {
+      "module": "pyramid",
+      "params": "base_size=20, height=15",
+      "path": "scad_shapes_library\\pyramid.scad"
+    },
+    "rectangular_box.scad": {
+      "module": "rectangular_box",
+      "params": "width=20, depth=15, height=10",
+      "path": "scad_shapes_library\\rectangular_box.scad"
+    },
+    "rounded_cube.scad": {
+      "module": "rounded_cube",
+      "params": "size=10, radius=2",
+      "path": "scad_shapes_library\\rounded_cube.scad"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+// param: outer_radius=10, inner_radius=5, height=20
+module hollow_cylinder(outer_radius=10, inner_radius=5, height=20) {
+    difference() {
+        cylinder(r=outer_radius, h=height, center=true);
+        cylinder(r=inner_radius, h=height+1, center=true);
+    }
+}
+hollow_cylinder(outer_radius=10, inner_radius=5, height=20);
